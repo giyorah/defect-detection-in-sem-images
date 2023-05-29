@@ -1,34 +1,37 @@
 # Defects Detection in SEM Images
-Given two SEM (Scanning Electron Microscope) images, a query (“inspected”) image and a train (“reference”) image, the goal is to detect defect patterns such as bridge, break and line collapses as well as blotches.
+[![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/captain-n3m0/blob/master/LICENSE)
+
+Given two SEM (Scanning Electron Microscope) images, a Query (“inspected”) image and a Train (“reference”) image, the goal is to detect defect patterns such as bridge, break and line collapses as well as blotches.
 
 ## Assumptions
-### Query and Train images are not aligned
-In other words, there are areas of the query image that are not represented in the train image. Therefore, any defect that may be present in these non-overlapping regions will not be detected using the information provided by the train image. 
+### 1. Query and Train images are not aligned
+In other words, there are areas of the query image that are not represented in the Train image. Therefore, any defect that may be present in these non-overlapping regions will not be detected using the information provided by the Train image. 
 
 Example:
 
 <div align=center>
-  <img src="input/case3_inspected_image.jpg" width="375" style="margin:20">
+  <img src="images/case3_inspected_image.jpg" width="375" style="margin:20">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="input/case3_reference_image.jpg" width="375" style="margin:20"> 
+  <img src="images/case3_reference_image.jpg" width="375" style="margin:20"> 
 </div>
 <div align=center>
- an example of the query image 
+ An example of the query image 
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- the corresponding train image
+ The corresponding Train image
 </div>
+<br>
 
-### Statistical modeling, aka ML, is out of scope
+### 2. Statistical modeling, aka ML, is out of scope
 Instead, I solely employ classical computer vision techniques to address the problem at hand. Consequently, this solution lacks generalizability and should only be considered as a foundational framework.
-It is worth mentioning that contemporary methods can tackle this type of problem without the need for training images. ML algorithms, based on statistical approaches, offer significantly enhanced robustness and can achieve near-perfect accuracy down to the pixel level.
+It is worth mentioning that contemporary methods can tackle this type of problem without the need for Train images. ML algorithms, based on statistical approaches, offer significantly enhanced robustness and can achieve near-perfect accuracy down to the pixel level.
 
  
-### Defect types considered
+### 3. Defect types considered
 
-1. Radial blobs/blotches
-2. Elongated cracks/pits
-3. Hair-like: thin (often 1-pixel wide), elongated features that resemble strands of hair.
-<br>
+* Radial blobs/blotches
+* Elongated cracks/pits
+* Hair-like: thin (often 1-pixel wide), elongated features that resemble strands of hair.
+
 Here are some examples:
 <br>
 <div align=center><img src="images/defect_types.jpg" width="480" style="margin:20">
@@ -42,9 +45,9 @@ an example of defect types
   <li>Apply image registration by template matching to align the two images.</li>
   <li>Calculate the difference between the grayscale versions of the two aligned images.</li>
   <li>Detect defects by type:
-      <ol type="a">
+      <ol>
           <li>Look for radial blobs
-              <ol type="i">
+              <ol>
                   <li>Sharpen the difference image</li>
                   <li>Threshold it</li>
                   <li>Open it (i.e. erode and dilate)</li>
@@ -52,14 +55,14 @@ an example of defect types
               </ol>
           </li>
           <li>Look for elongated cracks/pits
-              <ol type="i">
+              <ol>
                   <li>Threshold the difference image</li>
                   <li>Open it (i.e. erode and dilate)</li>
                   <li>Return the resulting mask</li>
               </ol>
           </li>
           <li>Look for hair-like defects
-              <ol type="i">
+              <ol>
                   <li>Threshold the difference image</li>
                   <li>Find contours in it</li>
                   <li>On a clean mask, draw only the "hair" shaped contours</li>
@@ -97,6 +100,8 @@ Result pair 3 (no defects):
   <img src="output/case3_inspected_image_defects_mask.jpg" width="375" style="margin:20">
 </div>
 
+<br><br>
+
 ## Usage
 ```
 git clone https://github.com/giyorahy/defect-detection-in-sem-images.git
@@ -104,3 +109,8 @@ cd defect-detection-in-sem-images/src
 pip install -r requirements.txt 
 python main.py
 ```
+
+## License / Future work
+This work is licensed under the permissive open source MIT license.
+
+You are encouraged to contribute, fork, and extend this code.
